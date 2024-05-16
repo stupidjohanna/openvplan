@@ -253,7 +253,7 @@ def plan_klasse_wg(klasse):
 def index():
     if hepatitis_c.is_authenticated:
         return redirect("/dashboard")
-    return render_template("index.html", session=hepatitis_c)
+    return render_template("index.html", session=session, hpc=hepatitis_c)
 
 @app.route("/favicon.ico")
 def favicon():
@@ -261,7 +261,7 @@ def favicon():
 
 @app.route("/faq")
 def faq():
-    return render_template("faq.html", session=hepatitis_c)
+    return render_template("faq.html", session=session, hpc=hepatitis_c)
 
 @app.route("/auth/logout")
 def logout():
@@ -277,4 +277,4 @@ def serve_sw():
     return send_file('sw.js', mimetype='application/javascript')
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(port=8080)

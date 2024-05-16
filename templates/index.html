@@ -42,7 +42,7 @@
   </div>
   <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
     <button onclick="w3_close()" class="w3-bar-item w3-large">Schließen &times;</button>
-    {% if session.is_authenticated %}
+    {% if hpc.is_authenticated %}
       <a href="/dashboard" class="w3-bar-item w3-button">Dashboard</a>
       <a href="/auth/logout" class="w3-bar-item w3-button">Abmelden</a>
       <a href="/vplan" class="w3-bar-item w3-button">Zum Plan</a>
