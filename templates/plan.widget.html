@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="theme-color" content="#317EFB"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_144x144.png')}}" type="image/png">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_192x192.png')}}" type="image/png">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_512x512.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_144x144.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_192x192.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_512x512.png')}}" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="manifest" href="/manifest.json">
+   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register("/sw.js").then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+
+    function w3_open() {
+          document.getElementById("mySidebar").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("mySidebar").style.display = "none";
+        }
+
+        function yesterdaysPlan() {
+            var date = new Date();
+            date.setDate(date.getDate() - 1);
+            window.location.href = window.location.href.split("?")[0] + "?date=" + date.toISOString().split('T')[0];
+        }
+
+        function tomorrowsPlan() {
+            var date = new Date();
+            date.setDate(date.getDate() + 1);
+            window.location.href = window.location.href.split("?")[0] + "?date=" + date.toISOString().split('T')[0];
+        }
+
+  </script>
+</head>
+<body>
+
+
+
+<div class="w3-container">
+        <div class="w3-container w3-{{session.get('color-scheme', 'teal')}}">
+            <h2>Stundenplan</h2>
+            <hr>
+            <h3>Letzte Aktualisierung: {{plan.dateCreated.strftime("%d.%m.%Y")}}</h3>
+        </div>
+        <ul>
+            {% for cl in plan.classPlans %}
+                {% if cl.className == myCls %}
+                    {% for l in cl.lessons %}
+                    {% if not session.get("kurse") or l.subject in session.get("kurse") %}
+                        <div class="w3-container w3-border w3-margin">
+                            <span style="font-size: 15px">{{l.lessonNumber}}</span> <span style="font-size: 30px">{{l.subject}}</span>
+                                <ul style="list-style-type: none">
+                                    <li style="list-style-type: none"><i class="fa-solid fa-user"></i> <span style="font-size: 15px">{{l.room}}</span></li>
+                                    <li style="list-style-type: none"><i class="fa-solid fa-location-dot"></i> <span style="font-size: 15px">{{l.teacher}}</span></li>
+                                </ul>
+                            {% for line in l.info%}
+                                <p style="color: #f00">{{line}}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+            {% if plan.info %}
+            <div class="w3-container w3-border w3-card-4">
+                <h2>Informationen</h2>
+                <hr>
+                {% for info in plan.info %}
+                    <p>{{info}}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <button onclick="yesterdaysPlan()" class="w3-button w3-{{session.get('color-scheme', 'teal')}}"><i class="fa-solid fa-arrow-left"></i></button>
+        <button onclick="window.location.reload()" class="w3-button w3-{{session.get('color-scheme', 'teal')}}"><i class="fa-solid fa-rotate-right"></i></button>
+        <button onclick="tomorrowsPlan()" class="w3-button w3-{{session.get('color-scheme', 'teal')}}"><i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="theme-color" content="#317EFB"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenVPlan - Einstellungen</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_144x144.png')}}" type="image/png">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_192x192.png')}}" type="image/png">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_512x512.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_144x144.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_192x192.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_512x512.png')}}" type="image/png">
+  <link rel="manifest" href="/manifest.json">
+   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+    .w3-container.w3-margin.w3-border.w3-padding select:not(#color-scheme){
+    text-align: center;
+    font-size: 16px;
+      height: 600px;
+    }
+  </style>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register("/sw.js").then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+
+    function w3_open() {
+          document.getElementById("mySidebar").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("mySidebar").style.display = "none";
+        }
+
+
+    function sendDisplayName() {
+        var displayname = document.getElementById('displayname').value;
+        fetch('/api/displayname', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({displayname: displayname})
+        }).then(function(response) {
+            if (response.ok) {
+            console.log('Displayname gesetzt');
+            window.location.reload();
+
+            }
+        });
+    }
+
+    function sendKlassen() {
+        var klassen = Array.from(document.getElementById('klassen').selectedOptions).map(option => option.value);
+        fetch('/api/klassen', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({klassen: klassen})
+        }).then(function(response) {
+            if (response.ok) {
+            console.log('Klassen gesetzt');
+            window.location.reload();
+
+            }
+        });
+    }
+
+    function sendClrScheme() {
+        var colorScheme = document.getElementById('color-scheme').value;
+        fetch('/api/color-scheme', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({colorScheme: colorScheme})
+        }).then(function(response) {
+            if (response.ok) {
+            console.log('Farbschema gesetzt');
+            window.location.reload();
+
+            }
+        });
+    }
+
+    function sendKurse() {
+        var kurse = Array.from(document.getElementById('kurse').selectedOptions).map(option => option.value);
+        fetch('/api/kurse', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({kurse: kurse})
+        }).then(function(response) {
+            if (response.ok) {
+            console.log('Kurse gesetzt');
+            window.location.reload();
+
+            }
+        });
+    }
+  </script>
+</head>
+<body>
+  <div class="w3-{{session.get('color-scheme', 'teal')}}">
+    <button class="w3-button w3-{{session.get('color-scheme', 'teal')}} w3-xlarge" onclick="w3_open()">☰</button>
+    <div class="w3-container">
+      <h1>Hallo, {{session.get('username', 'wir haben dich vermisst!')}}</h1>
+    </div>
+  </div>
+  <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
+    <button onclick="w3_close()" class="w3-bar-item w3-large">Schließen &times;</button>
+    {% if hpc.is_authenticated %}
+      <a href="/auth/logout" class="w3-bar-item w3-button">Abmelden</a>
+      <a href="/vplan" class="w3-bar-item w3-button">Zum Plan</a>
+      <a href="/prefs" class="w3-bar-item w3-button">Einstellungen</a>
+    {% else %}
+      <a href="/auth/login" class="w3-bar-item w3-button">Anmelden</a>
+    {% endif %}
+  </div>
+
+    <div class="w3-container w3-margin w3-border w3-padding">
+        <label>Wie sollen wir dich nennen?</label>
+        <input class="w3-input" value="{{session.get('username')}}" id="displayname" placeholder="Sag uns doch, wie wir dich nennen sollen!" required>
+        <sub>Du kannst das jederzeit in den Einstellungen anpassen</sub>
+      <button class="w3-button w3-{{session.get('color-scheme', 'teal')}}" onclick="sendDisplayName()">Absenden!</button>
+    </div>
+    <div class="w3-container w3-margin w3-border w3-padding">
+        <label>Welche Klasse(n) besuchst du?</label>
+      <select class="w3-select" id="klassen" multiple required>
+        {% for klasse in klassen %}
+          {% if klasse.className in session.get('klassen',[]) %}
+          <option value="{{klasse.className}}" selected>{{klasse.className}}</option>
+          {% else %}
+        <option value="{{klasse.className}}" >{{klasse.className}}</option>
+          {% endif %}
+            <hr>
+
+        {% endfor %}
+      </select>
+      <button class="w3-button w3-{{session.get('color-scheme', 'teal')}}" onclick="sendKlassen()">Absenden!</button>
+    </div>
+    {% for klasse in session.get('klassen') %}
+      {% if klasse in ["JG11", "JG12"] %}
+        <div class="w3-container w3-margin w3-border w3-padding">
+            <label>Welche Kurse besuchst du?</label>
+          <select class="w3-select" id="kurse" multiple required>
+            {% for kurs in profileGetter().uePlans %}
+              {% if kurs.className.lower() == klasse.lower() %}
+                {% for k in kurs.ue %}
+            {% if k.subject in session.get('kurse',[]) %}
+                  <option value="{{k.subject}}" selected>{{k.subject}} ({{k.teacher}})</option>
+            {% else %}
+                    <option value="{{k.subject}}">{{k.subject}} ({{k.teacher}})</option>
+            {% endif %}
+            <hr>
+                  {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </select>
+          <button class="w3-button w3-{{session.get('color-scheme', 'teal')}}" onclick="sendKurse()">Absenden!</button>
+      {% endif %}
+    {% endfor %}
+        </div>
+
+    <div class="w3-container w3-margin w3-border w3-padding">
+      <label>Welche Akzentfarbe möchtest du verwenden?</label>
+      <select class="w3-select" id="color-scheme" required>
+        <option value="teal">Aquamarin</option>
+        <option value="blue">Blau</option>
+        <option value="green">Grün</option>
+        <option value="red">Rot</option>
+        <option value="orange">Orange</option>
+        <option value="purple">Lila</option>
+        <option value="pink">Pink</option>
+        <option value="indigo">Indigo</option>
+        <option value="cyan">Cyan</option>
+        <option value="brown">Braun</option>
+        <option value="lime">Neongrün</option>
+        <option value="amber">Bernstein</option>
+        <option value="deep-orange">Dunkelorange</option>
+        <option value="light-blue">Hellblau</option>
+        <option value="light-green">Hellgrün</option>
+        <option value="yellow">Gelb</option>
+        <option value="deep-purple">Dunkellila</option>
+        <option value="blue-grey">Blaugrau</option>
+        <option value="grey">Grau</option>
+        <option value="black">Schwarz</option>
+        </select>
+      <button class="w3-button w3-{{session.get('color-scheme', 'teal')}}" onclick="sendClrScheme()">Absenden!</button>
+    </div>
+</body>
+</html>

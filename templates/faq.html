@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="theme-color" content="#317EFB"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenVPlan - FAQ</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_144x144.png')}}" type="image/png">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_192x192.png')}}" type="image/png">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_512x512.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_144x144.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_192x192.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_512x512.png')}}" type="image/png">
+  <link rel="manifest" href="/manifest.json">
+   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register("/sw.js").then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+
+    function w3_open() {
+          document.getElementById("mySidebar").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("mySidebar").style.display = "none";
+        }
+  </script>
+</head>
+<body>
+  <div class="w3-{{session.get('color-scheme', 'teal')}}">
+    <button class="w3-button w3-{{session.get('color-scheme', 'teal')}} w3-xlarge" onclick="w3_open()">☰</button>
+    <div class="w3-container">
+      <h1>OpenVPlan</h1>
+    </div>
+  </div>
+  <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
+    <button onclick="w3_close()" class="w3-bar-item w3-large">Schließen &times;</button>
+    {% if session.is_authenticated %}
+      <a href="/dashboard" class="w3-bar-item w3-button">Dashboard</a>
+      <a href="/auth/logout" class="w3-bar-item w3-button">Abmelden</a>
+      <a href="/vplan" class="w3-bar-item w3-button">Zum Plan</a>
+      <a href="/prefs" class="w3-bar-item w3-button">Einstellungen</a>
+    {% else %}
+      <a href="/auth/login" class="w3-bar-item w3-button">Anmelden</a>
+    {% endif %}
+
+  </div>
+  <h2>FAQ</h2>
+
+    <div class="w3-container w3-margin w3-border w3-padding">
+        <h3>Was ist OpenVPlan?</h3>
+        <p>OpenVPlan ist ein Open-Source-Projekt, das es Schülern ermöglicht, Stundenplan24-Daten anzusehen.</p>
+</div>
+
+        <div class="w3-container w3-margin w3-border w3-padding">
+            <h3>Wie kann ich meinen Stundenplan einsehen?</h3>
+            <p>Um deinen Stundenplan einzusehen, musst du dich anmelden. Wenn du angemeldet bist, kannst du deinen Stundenplan auf der Seite "Zum Plan" einsehen.</p>
+        </div>
+      <div class="w3-container w3-margin w3-border w3-padding">
+        <h3>Wie kann ich meinen Stundenplan ändern?</h3>
+        <p>Um deinen Stundenplan zu ändern, musst du dich anmelden und auf die Seite "Einstellungen" gehen. Dort kannst du deinen Stundenplan ändern.</p>
+    </div>
+    <div class="w3-container w3-margin w3-border w3-padding">
+        <h3>Wie kann ich mich abmelden?</h3>
+        <p>Um dich abzumelden, musst du auf "Abmelden" klicken.</p>
+    </div>
+    <div class="w3-container w3-margin w3-border w3-padding">
+        <h3>Woher kommen die Daten?</h3>
+        <p>Die Daten werden nicht direkt von Stundenplan24 heruntergeladen, sondern stattdessen von der NeXTPlan-API abgefragt. </p>
+      <p>Die NeXTPlan-API stellt eine Art Middleware, bzw. einen Proxy zwischen Stundenplan24 und dem Client dar.</p>
+    </div>
+    <div class="w3-container w3-margin w3-border w3-padding">
+        <h3>Warum NeXTPlan?</h3>
+      <p>NeXTPlan wandelt die etwas unübersichtlichen XML-Rohdaten in standartisiertes JSON um. Außerdem ist NeXTPlan ein <a href="https://github.com/NeXT-VPlan/NeXTAPI">Open-Source Projekt</a></p>
+    </div>
+
+</body>
+</html>

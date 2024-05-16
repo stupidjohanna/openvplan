@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="theme-color" content="#317EFB"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenVPlan - Anmeldung</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_144x144.png')}}" type="image/png">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_192x192.png')}}" type="image/png">
+  <link rel="icon" href="{{url_for('static', filename='icons/icon_512x512.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_144x144.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_192x192.png')}}" type="image/png">
+  <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/icon_512x512.png')}}" type="image/png">
+  <link rel="manifest" href="/manifest.json">
+   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register("/sw.js").then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="mySidebar">
+    <button onclick="w3_close()" class="w3-bar-item w3-large">Schließen &times;</button>
+    {% if session.logged_in %}
+      <a href="/auth/logout" class="w3-bar-item w3-button">Abmelden</a>
+      <a href="/vplan" class="w3-bar-item w3-button">Zum Plan</a>
+      <a href="/prefs" class="w3-bar-item w3-button">Einstellungen</a>
+    {% else %}
+      <a href="/auth/login" class="w3-bar-item w3-button">Anmelden</a>
+    {% endif %}
+  </div>
+     <div class="w3-card-4">
+         <div class="w3-container w3-green">
+            <h2>Schulanmeldung</h2>
+    </div>
+     <form class="w3-container w3-margin" action="/auth/login" method="post">
+
+        <label>Schulnummer</label>
+        <input class="w3-input" type="number" name="schulnummer" placeholder="Eine 8-Stellige Zahl von deiner Schule" required>
+
+        <label>Anmeldename</label>
+        <input class="w3-input" type="text" name="username" placeholder="Vermutlich 'schueler'" required>
+
+        <label>Passwort</label>
+        <input class="w3-input" type="password" name="password" placeholder="Dein Passwort" required>
+
+         <input class="w3-button w3-green" type="submit">
+         <a href="/" class="w3-button w3-green w3-margin">Zurück</a>
+        </form>
+     </div>
+</body>
+</html>
